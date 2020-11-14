@@ -1,0 +1,35 @@
+{
+  "name": "robusta-sdk",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "files": ["dist"],
+  "types": "dist/",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "rm -rf dist && tsc",
+    "prepare": "npm run build",
+    "version" : "npm run format && git add -A src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pthor11/robusta-sdk.git"
+  },
+  "keywords": [],
+  "author": "pthor11 <phuonglm@me.com> (https://github.com/pthor11)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pthor11/robusta-sdk/issues"
+  },
+  "homepage": "https://github.com/pthor11/robusta-sdk#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "description": ""
+}
