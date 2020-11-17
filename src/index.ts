@@ -32,3 +32,5 @@ const robusta = new Robusta({
 //     // currency: { type: 'trc10', address: '1002000' }
 //     currency: { type: 'trc20', address: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t' }
 // }).then(console.log).catch(console.error)
+
+console.log(robusta.newAddress({type: 'trx'}))

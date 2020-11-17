@@ -3,6 +3,11 @@ import { loadSync } from "@grpc/proto-loader";
 import { loadPackageDefinition, credentials } from "grpc";
 import { join } from "path";
 import { promisify } from "util";
+import { ECPair, networks } from "bitcoinjs-lib";
+import TronWeb from "tronweb";
+
+const tronweb = new TronWeb({ fullHost: 'https://api.trongrid.io' })
+const network = networks.bitcoin
 
 type Currency = {
     type: 'btc' | 'bch' | 'ltc' | 'eth' | 'etc' | 'trx' | 'trc10' | 'trc20' | 'erc20',
@@ -103,6 +108,19 @@ class Robusta {
             return { result, error }
         } catch (e) {
             throw e
+        }
+    }
+
+    public newAddress(params: { type: 'btc' | 'bch' | 'ltc' | 'eth' | 'etc' | 'trx' }): { address: string, privateKey: string } {
+        const keyPair = ECPair.makeRandom({ network })
+
+        switch (params.type) {
+            case 'trx':
+                const privateKey = keyPair.privateKey!.toString('hex')
+                const address = tronweb.address.fromPrivateKey(privateKey)
+                return { address, privateKey }
+
+            default: throw new Error(`type ${params.type} not supported yet`)
         }
     }
 
