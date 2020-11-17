@@ -38,8 +38,5 @@
     "kafkajs": "^1.14.0",
     "tronweb": "^3.1.0"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
-  "description": ""
+  "description": "A robusta sdk for node"
 }
