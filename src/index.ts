@@ -1,13 +1,15 @@
 import { Robusta } from "./client";
 
-const callback = async change => console.log({ change })
+export { Robusta }
 
-const robusta = new Robusta({
-    apiKey: 'ZB194E2-8J44B36-GA3Y1RH-6RN3VJ4',
-    provider: 'localhost:8600',
-    brokers: ['localhost:9092'],
-    callback
-})
+// const callback = async change => console.log({ change })
+
+// const robusta = new Robusta({
+//     apiKey: 'ZB194E2-8J44B36-GA3Y1RH-6RN3VJ4',
+//     provider: 'localhost:8600',
+//     brokers: ['localhost:9092'],
+//     callback
+// })
 
 // robusta.connect()
 //     .then(() => console.log('connected'))
@@ -33,4 +35,4 @@ const robusta = new Robusta({
 //     currency: { type: 'trc20', address: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t' }
 // }).then(console.log).catch(console.error)
 
-console.log(robusta.newAddress({type: 'trx'}))
+// console.log(robusta.newAddress({type: 'trx'}))
