@@ -27,11 +27,7 @@ type Change = {
 class Robusta {
     private _apiKey: string
     private _provider: string
-    private _grpc: any
     private _grpcCall: any
-    private _kafka?: Kafka
-    private _consumer?: Consumer
-    private _callback?: (change: Change) => Promise<void>
 
     constructor(params: { apiKey: string, provider: string }) {
         if (!params.apiKey) throw new Error(`apiKey must be provided`)
@@ -48,9 +44,9 @@ class Robusta {
             oneofs: true,
         })) as any
 
-        this._grpc = new packageObject['BrickService'](this._provider, credentials.createInsecure())
+        const grpc = new packageObject['BrickService'](this._provider, credentials.createInsecure())
 
-        this._grpcCall = promisify(this._grpc.call).bind(this._grpc)
+        this._grpcCall = promisify(grpc.call).bind(grpc)
     }
 
     public async consume(params: { brokers: string[], callback: (change: Change) => Promise<void> }) {

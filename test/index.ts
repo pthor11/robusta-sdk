@@ -4,9 +4,7 @@ const callback = async change => console.log({ change })
 
 const robusta = new Robusta({
     apiKey: 'ZB194E2-8J44B36-GA3Y1RH-6RN3VJ4',
-    provider: 'localhost:8600',
-    brokers: ['localhost:9092'],
-    callback
+    provider: 'localhost:8600'
 })
 
 // robusta.connect()
