@@ -33,13 +33,12 @@ class Robusta {
     private _consumer?: Consumer
     private _callback?: (change: Change) => Promise<void>
 
-    constructor(params: { apiKey: string, provider: string, brokers?: string[], callback?: (change: Change) => Promise<void> }) {
+    constructor(params: { apiKey: string, provider: string }) {
         if (!params.apiKey) throw new Error(`apiKey must be provided`)
         if (!params.provider) throw new Error(`provider must be provided`)
 
         this._apiKey = params.apiKey
         this._provider = params.provider
-        this._callback = params.callback
 
         const packageObject = loadPackageDefinition(loadSync(join(__dirname, '../BrickService.proto'), {
             keepCase: true,
@@ -52,34 +51,45 @@ class Robusta {
         this._grpc = new packageObject['BrickService'](this._provider, credentials.createInsecure())
 
         this._grpcCall = promisify(this._grpc.call).bind(this._grpc)
-
-        // this._kafka = new Kafka({
-        //     clientId: this._apiKey,
-        //     brokers: params.brokers,
-        //     ssl: false,
-        //     sasl: undefined
-        // })
-
-        // this._consumer = this._kafka.consumer({ groupId: `${this._apiKey}` })
     }
 
-    // public async connect() {
-    //     await this._consumer.connect()
-    //     console.log(`consumer connected`)
+    public async consume(params: { brokers: string[], callback: (change: Change) => Promise<void> }) {
+        try {
+            if (!params.brokers.length) throw new Error(`brokers must be provided`)
+            if (!params.callback) throw new Error(`callback must be provided`)
 
-    //     await this._consumer.subscribe({ topic: this._apiKey, fromBeginning: true })
-    //     console.log(`topic subscribed`)
+            const kafka = new Kafka({
+                clientId: this._apiKey,
+                brokers: params.brokers,
+                ssl: false,
+                sasl: undefined
+            })
 
-    //     await this._consumer.run({
-    //         eachMessage: async payload => {
-    //             const { value } = payload.message
+            const consumer = kafka.consumer({ groupId: `${this._apiKey}` })
 
-    //             const data = JSON.parse(Buffer.from(value!).toString())
+            await consumer.connect()
+            console.log(`consumer connected`)
 
-    //             this._callback(data)
-    //         }
-    //     })
-    // }
+            await consumer.subscribe({ topic: this._apiKey, fromBeginning: true })
+            console.log(`topic subscribed`)
+
+            await consumer.run({
+                eachMessage: async payload => {
+                    try {
+                        const { value } = payload.message
+
+                        const data = JSON.parse(Buffer.from(value!).toString())
+
+                        await params.callback(data)
+                    } catch (e) {
+                        throw e
+                    }
+                }
+            })
+        } catch (e) {
+            throw e
+        }
+    }
 
     public async watch(params: { address: string, currency: Currency }): Promise<{ result: string, error: string }> {
         try {
