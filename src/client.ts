@@ -130,6 +130,13 @@ class Robusta {
         }
     }
 
+    public sendTrx(params: { privateKey: string, toAddress: string, amount: number, feeLimit: number }): Promise<string> {
+        try {
+            return Promise.resolve('')
+        } catch (e) {
+            throw e
+        }
+    }
 }
 
 export { Robusta }
